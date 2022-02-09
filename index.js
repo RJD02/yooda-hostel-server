@@ -96,6 +96,25 @@ async function run() {
       res.send({ count, students: students });
     });
 
+    app.post("/student-invert-status", async (req, res) => {
+      const ids = req.body.ids;
+      for (let i = 0; i < ids.length; i++) {
+        student = await studentsCollection.find({ _id: id[i] });
+        // console.log(student);
+        // studentsCollection.findByIdAndUpdate(id[i], {})
+        await studentsCollection.findOneAndUpdate(
+          { _id: id[i] },
+          {
+            status: !student.status,
+          },
+          { new: true }
+        );
+      }
+      res
+        .status(200)
+        .json({ message: "Successfully updated the status change" });
+    });
+
     app.get("/allFoods/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
